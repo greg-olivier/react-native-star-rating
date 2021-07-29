@@ -2,40 +2,42 @@
 import React, { Component } from "react";
 import { Image, StyleSheet, ViewPropTypes } from "react-native";
 import PropTypes from "prop-types";
-import { createIconSetFromIcoMoon } from "react-native-vector-icons";
 
 // Third party imports
 import Button from "react-native-button";
-import EntypoIcons from "react-native-vector-icons/Entypo";
-import EvilIconsIcons from "react-native-vector-icons/EvilIcons";
-import FeatherIcons from "react-native-vector-icons/Feather";
-import FontAwesomeIcons from "react-native-vector-icons/FontAwesome";
-import FontAwesome5Icons from "react-native-vector-icons/FontAwesome5";
-import FoundationIcons from "react-native-vector-icons/Foundation";
-import IoniconsIcons from "react-native-vector-icons/Ionicons";
-import MaterialIconsIcons from "react-native-vector-icons/MaterialIcons";
-import MaterialCommunityIconsIcons from "react-native-vector-icons/MaterialCommunityIcons";
-import OcticonsIcons from "react-native-vector-icons/Octicons";
-import ZocialIcons from "react-native-vector-icons/Zocial";
-import SimpleLineIconsIcons from "react-native-vector-icons/SimpleLineIcons";
-import FontistoIcons from "react-native-vector-icons/Fontisto";
-import AntDesignIcons from "react-native-vector-icons/AntDesign";
+import { 
+  createIconSetFromIcoMoon, 
+  AntDesign,
+  Entypo,
+  EvilIcons,
+  Feather,
+  Fontisto,
+  FontAwesome,
+  FontAwesome5,
+  Foundation,
+  Ionicons,
+  MaterialIcons,
+  MaterialCommunityIcons,
+  Octicons,
+  SimpleLineIcons,
+  Zocial
+} from "@expo/vector-icons";
 
 const iconSets = {
-  Entypo: EntypoIcons,
-  EvilIcons: EvilIconsIcons,
-  Feather: FeatherIcons,
-  FontAwesome: FontAwesomeIcons,
-  FontAwesome5: FontAwesome5Icons,
-  Foundation: FoundationIcons,
-  Ionicons: IoniconsIcons,
-  MaterialIcons: MaterialIconsIcons,
-  MaterialCommunityIcons: MaterialCommunityIconsIcons,
-  Octicons: OcticonsIcons,
-  Zocial: ZocialIcons,
-  SimpleLineIcons: SimpleLineIconsIcons,
-  Fontisto: FontistoIcons,
-  AntDesign: AntDesignIcons,
+  Entypo,
+  EvilIcons,
+  Feather,
+  FontAwesome,
+  FontAwesome5,
+  Foundation,
+  Ionicons,
+  MaterialIcons,
+  MaterialCommunityIcons,
+  Octicons,
+  Zocial,
+  SimpleLineIcons,
+  Fontisto,
+  AntDesign,
 };
 
 const propTypes = {
