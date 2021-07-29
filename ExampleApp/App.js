@@ -52,10 +52,6 @@ export default class App extends Component {
         </Text>
         <StarRating
           disabled={false}
-          emptyStar="ios-star-outline"
-          fullStar="ios-star"
-          halfStar="ios-star-half"
-          iconSet="Ionicons"
           maxStars={7}
           rating={this.state.customStarCount}
           selectedStar={rating => this.onCustomStarRatingPress(rating)}
