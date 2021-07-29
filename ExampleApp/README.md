@@ -45,12 +45,12 @@ Runs your app in development mode.
 
 Open it in the [Expo app](https://expo.io) on your phone to view it. It will reload if you save edits to your files, and you will see build errors and logs in the terminal.
 
-Sometimes you may need to reset or clear the React Native packager's cache. To do so, you can pass the `--reset-cache` flag to the start script:
+Sometimes you may need to reset or clear the React Native packager's cache. To do so, you can pass the `-c` flag to the start script:
 
 ```
-npm start -- --reset-cache
+npm start -- -c
 # or
-yarn start -- --reset-cache
+yarn start -- -c
 ```
 
 #### `npm test`
@@ -84,11 +84,11 @@ This will start the process of "ejecting" from Create React Native App's build s
 
 ## Customizing App Display Name and Icon
 
-You can edit `app.json` to include [configuration keys](https://docs.expo.io/versions/latest/guides/configuration.html) under the `expo` key.
+You can edit `app.json` to include [configuration keys](https://docs.expo.io/versions/latest/guides/configuration.html).
 
-To change your app's display name, set the `expo.name` key in `app.json` to an appropriate string.
+To change your app's display name, change the `name` key in `app.json` to an appropriate string.
 
-To set an app icon, set the `expo.icon` key in `app.json` to be either a local path or a URL. It's recommended that you use a 512x512 png file with transparency.
+To set an app icon, set the `icon` key in `app.json` to be either a local path or a URL. It's recommended that you use a 512x512 png file with transparency.
 
 ## Writing and Running Tests
 
