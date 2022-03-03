@@ -1,10 +1,9 @@
 // React and react native imports
 import React, { Component } from "react";
-import { Image, StyleSheet, ViewPropTypes } from "react-native";
+import { Image, StyleSheet, ViewPropTypes, Pressable } from "react-native";
 import PropTypes from "prop-types";
 
 // Third party imports
-import Button from "react-native-button";
 import { 
   createIconSetFromIcoMoon, 
   AntDesign,
@@ -56,6 +55,7 @@ const propTypes = {
   ]).isRequired,
   starSize: PropTypes.number.isRequired,
   activeOpacity: PropTypes.number.isRequired,
+  disabledOpacity: PropTypes.number,
   starStyle: ViewPropTypes.style,
   iconSolid: PropTypes.bool,
   onStarButtonPress: PropTypes.func.isRequired,
@@ -63,6 +63,7 @@ const propTypes = {
 
 const defaultProps = {
   buttonStyle: {},
+  disabledOpacity: 1,
   icoMoonJson: undefined,
   starStyle: {},
   iconSolid: false,
@@ -95,6 +96,20 @@ class StarButton extends Component {
     }
 
     return iconSets[iconSet];
+  }
+
+  getButtonOpacity(pressed) {
+    const { disabled, disabledOpacity, activeOpacity } = this.props;
+    if (disabled) {
+      return disabledOpacity;
+    } else {
+      if (pressed) return activeOpacity;
+      else return 1;
+    }
+  };
+
+  makeButtonStyle({ pressed }) {
+    return [this.props.buttonStyle, { opacity: getOpacity(pressed) }];
   }
 
   renderIcon() {
@@ -145,17 +160,16 @@ class StarButton extends Component {
   }
 
   render() {
-    const { activeOpacity, buttonStyle, disabled } = this.props;
+    const { disabled } = this.props;
 
     return (
-      <Button
-        activeOpacity={activeOpacity}
+      <Pressable
         disabled={disabled}
-        containerStyle={buttonStyle}
+        style={this.makeButtonStyle}
         onPress={this.onButtonPress}
       >
         {this.renderIcon()}
-      </Button>
+      </Pressable>
     );
   }
 }
