@@ -1,27 +1,28 @@
 // React and react native imports
-import React, { Component } from "react";
-import { View, ViewPropTypes, StyleSheet } from "react-native";
-import PropTypes from "prop-types";
-import { View as AnimatableView } from "react-native-animatable";
+import React, { useCallback, useMemo, useRef } from 'react';
+import { View, ViewPropTypes, StyleSheet } from 'react-native';
+import PropTypes from 'prop-types';
+import { View as AnimatableView } from 'react-native-animatable';
 
 // Local file imports
-import StarButton from "./StarButton";
+import StarButton from './StarButton';
 
 const ANIMATION_TYPES = [
-  "bounce",
-  "flash",
-  "jello",
-  "pulse",
-  "rotate",
-  "rubberBand",
-  "shake",
-  "swing",
-  "tada",
-  "wobble",
+  'bounce',
+  'flash',
+  'jello',
+  'pulse',
+  'rotate',
+  'rubberBand',
+  'shake',
+  'swing',
+  'tada',
+  'wobble',
 ];
 
 const propTypes = {
   activeOpacity: PropTypes.number,
+  disabledOpacity: PropTypes.number,
   animation: PropTypes.oneOf(ANIMATION_TYPES),
   buttonStyle: ViewPropTypes.style,
   containerStyle: ViewPropTypes.style,
@@ -59,19 +60,20 @@ const propTypes = {
 
 const defaultProps = {
   activeOpacity: 0.2,
+  disabledOpacity: 1,
   animation: undefined,
   buttonStyle: {},
   containerStyle: {},
   disabled: false,
-  emptyStar: "star-outline",
-  emptyStarColor: "gray",
-  fullStar: "star-sharp",
-  fullStarColor: "black",
-  halfStar: "star-half-sharp",
+  emptyStar: 'star-outline',
+  emptyStarColor: 'gray',
+  fullStar: 'star-sharp',
+  fullStarColor: 'black',
+  halfStar: 'star-half-sharp',
   halfStarColor: undefined,
   halfStarEnabled: false,
   icoMoonJson: undefined,
-  iconSet: "Ionicons",
+  iconSet: 'Ionicons',
   maxStars: 5,
   rating: 0,
   reversed: false,
@@ -81,51 +83,48 @@ const defaultProps = {
   iconSolid: false,
 };
 
-class StarRating extends Component {
-  constructor(props) {
-    super(props);
+const StarRating = (props) => {
+  const {
+    activeOpacity,
+    disabledOpacity,
+    animation,
+    buttonStyle,
+    containerStyle,
+    disabled,
+    emptyStar,
+    emptyStarColor,
+    fullStar,
+    fullStarColor,
+    halfStar,
+    halfStarColor,
+    halfStarEnabled,
+    icoMoonJson,
+    iconSet,
+    maxStars,
+    rating,
+    reversed,
+    starSize,
+    starStyle,
+    selectedStar,
+    iconSolid,
+  } = props;
 
-    this.starRef = [];
-    this.onStarButtonPress = this.onStarButtonPress.bind(this);
-  }
+  const starRefs = useRef([]);
 
-  onStarButtonPress(rating) {
-    const { selectedStar } = this.props;
+  const onStarButtonPress = useCallback(
+    (value) => {
+      selectedStar(value);
+    },
+    [selectedStar],
+  );
 
-    selectedStar(rating);
-  }
+  const newContainerStyle = useMemo(() => ({
+    flexDirection: reversed ? 'row-reverse' : 'row',
+    justifyContent: 'space-between',
+    ...StyleSheet.flatten(containerStyle),
+  }), [containerStyle, reversed]);
 
-  render() {
-    const {
-      activeOpacity,
-      animation,
-      buttonStyle,
-      containerStyle,
-      disabled,
-      emptyStar,
-      emptyStarColor,
-      fullStar,
-      fullStarColor,
-      halfStar,
-      halfStarColor,
-      halfStarEnabled,
-      icoMoonJson,
-      iconSet,
-      maxStars,
-      rating,
-      reversed,
-      starSize,
-      starStyle,
-      iconSolid,
-    } = this.props;
-
-    const newContainerStyle = {
-      flexDirection: reversed ? "row-reverse" : "row",
-      justifyContent: "space-between",
-      ...StyleSheet.flatten(containerStyle),
-    };
-
-    // Round rating down to nearest .5 star
+  const renderItems = () => {
     let starsLeft = Math.round(rating * 2) / 2;
     const starButtons = [];
 
@@ -149,11 +148,12 @@ class StarRating extends Component {
         <AnimatableView
           key={i}
           ref={(node) => {
-            this.starRef.push(node);
+            starRefs.current.push(node);
           }}
         >
           <StarButton
             activeOpacity={activeOpacity}
+            disabledOpacity={disabledOpacity}
             buttonStyle={buttonStyle}
             disabled={disabled}
             halfStarEnabled={halfStarEnabled}
@@ -163,10 +163,10 @@ class StarRating extends Component {
             onStarButtonPress={(event) => {
               if (animation && ANIMATION_TYPES.includes(animation)) {
                 for (let s = 0; s <= i; s++) {
-                  this.starRef[s][animation](1000 + s * 200);
+                  starRefs.current[s][animation](1000 + (s * 200));
                 }
               }
-              this.onStarButtonPress(event);
+              onStarButtonPress(event);
             }}
             rating={i + 1}
             reversed={reversed}
@@ -181,17 +181,130 @@ class StarRating extends Component {
       starButtons.push(starButtonElement);
       starsLeft -= 1;
     }
+    return starButtons;
+  };
 
-    return (
-      <View
-        style={newContainerStyle}
-        pointerEvents={disabled ? "none" : "auto"}
-      >
-        {starButtons}
-      </View>
-    );
-  }
-}
+  return (
+    <View
+      style={newContainerStyle}
+      pointerEvents={disabled ? 'none' : 'auto'}
+    >
+      {renderItems()}
+    </View>
+  );
+};
+
+// class StarRating extends Component {
+//   constructor(props) {
+//     super(props);
+
+//     this.starRef = [];
+//     this.onStarButtonPress = this.onStarButtonPress.bind(this);
+//   }
+
+//   onStarButtonPress(rating) {
+//     const { selectedStar } = this.props;
+
+//     selectedStar(rating);
+//   }
+
+//   render() {
+//     const {
+//       activeOpacity,
+//       animation,
+//       buttonStyle,
+//       containerStyle,
+//       disabled,
+//       emptyStar,
+//       emptyStarColor,
+//       fullStar,
+//       fullStarColor,
+//       halfStar,
+//       halfStarColor,
+//       halfStarEnabled,
+//       icoMoonJson,
+//       iconSet,
+//       maxStars,
+//       rating,
+//       reversed,
+//       starSize,
+//       starStyle,
+//       iconSolid,
+//     } = this.props;
+
+//     const newContainerStyle = {
+//       flexDirection: reversed ? "row-reverse" : "row",
+//       justifyContent: "space-between",
+//       ...StyleSheet.flatten(containerStyle),
+//     };
+
+//     // Round rating down to nearest .5 star
+//     let starsLeft = Math.round(rating * 2) / 2;
+//     const starButtons = [];
+
+//     for (let i = 0; i < maxStars; i++) {
+//       let starIconName = emptyStar;
+//       let finalStarColor = emptyStarColor;
+
+//       if (starsLeft >= 1) {
+//         starIconName = fullStar;
+//         finalStarColor = fullStarColor;
+//       } else if (starsLeft === 0.5) {
+//         starIconName = halfStar;
+//         if (halfStarColor) {
+//           finalStarColor = halfStarColor;
+//         } else {
+//           finalStarColor = fullStarColor;
+//         }
+//       }
+
+//       const starButtonElement = (
+//         <AnimatableView
+//           key={i}
+//           ref={(node) => {
+//             this.starRef.push(node);
+//           }}
+//         >
+//           <StarButton
+//             activeOpacity={activeOpacity}
+//             buttonStyle={buttonStyle}
+//             disabled={disabled}
+//             halfStarEnabled={halfStarEnabled}
+//             icoMoonJson={icoMoonJson}
+//             iconSet={iconSet}
+//             iconSolid={iconSolid}
+//             onStarButtonPress={(event) => {
+//               if (animation && ANIMATION_TYPES.includes(animation)) {
+//                 for (let s = 0; s <= i; s++) {
+//                   this.starRef[s][animation](1000 + s * 200);
+//                 }
+//               }
+//               this.onStarButtonPress(event);
+//             }}
+//             rating={i + 1}
+//             reversed={reversed}
+//             starColor={finalStarColor}
+//             starIconName={starIconName}
+//             starSize={starSize}
+//             starStyle={starStyle}
+//           />
+//         </AnimatableView>
+//       );
+
+//       starButtons.push(starButtonElement);
+//       starsLeft -= 1;
+//     }
+
+//     return (
+//       <View
+//         style={newContainerStyle}
+//         pointerEvents={disabled ? "none" : "auto"}
+//       >
+//         {starButtons}
+//       </View>
+//     );
+//   }
+// }
 
 StarRating.propTypes = propTypes;
 StarRating.defaultProps = defaultProps;
